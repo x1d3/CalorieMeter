@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">CalorieMeter</string>
+    <string name="calculate">Посчитать калории</string>
+    <string name="changeLanguage">Change the language to 🇬🇧</string>
+    <string name="weight">Вес</string>
+    <string name="man">Мужчина</string>
+    <string name="woman">Женщина</string>
+    <string name="age">Возраст</string>
+    <string name="height">Рост</string>
+    <string name="santimetrs">см</string>
+    <string name="age2">лет</string>
+    <string name="kg">кг</string>
+    <string name="phis_activity">Физическая активность:</string>
+    <string name="min">минимальная (нет физ. нагрузок)</string>
+    <string name="avg_act">средняя (есть редкие тренировки)</string>
+    <string name="high_act">высокая (2-3 раза в неделю занимаетесь в спортзале)</string>
+    <string name="very_high">очень высокая(6-7 раз в неделю занимаетесь в спортзале)</string>
+    <string name="result">Результат:</string>
+    <string name="you_need">Вам требуется:</string>
+    <string name="kkalperday">ккал в день</string>
+    <string name="calculate_button">Рассчитать</string>
+    <string name="gladtoseeyou">Добро пожаловать!</string>
+    <string name="calculate_norm">Вычислить норму калорий</string>
+    <string name="choose_your_sex">Выберите пол:</string>
+    <string name="calories_format">%s: %d ккал</string>
+
 </resources>
