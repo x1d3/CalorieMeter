@@ -2,17 +2,60 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTint="#FF9BAA"
+    android:foregroundTint="#FF9BAA"
+    android:background="@color/purple"
     tools:context=".MainActivity">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:layout_width="258dp"
+        android:layout_height="122dp"
+        android:fontFamily="serif"
+        android:shadowColor="#673AB7"
+        android:text="Добро пожаловать!"
+        android:textAlignment="gravity"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.274"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.218" />
+
+    <Button
+        android:id="@+id/start"
+        android:layout_width="326dp"
+        android:layout_height="55dp"
+        android:backgroundTint="#F86464"
+        android:drawableTint="#D32F2F"
+        android:fontFamily="serif"
+        android:foregroundTint="#B13636"
+        android:text="@string/calculate"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.529"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.519" />
+
+    <Button
+        android:id="@+id/caloriecounter"
+        android:layout_width="323dp"
+        android:layout_height="55dp"
+        android:backgroundTint="#F86464"
+        android:fontFamily="serif"
+        android:text="Вычислить норму калорий"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.545"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.671" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
