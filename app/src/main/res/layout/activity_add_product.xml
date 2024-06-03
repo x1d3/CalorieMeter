@@ -1,9 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddProductActivity">
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:backgroundTint="#FF9BAA"
+    android:foregroundTint="#FF9BAA"
+    android:background="@color/purple">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:queryHint="Поиск продукта"
+        android:fontFamily="serif"
+        android:textColor="#FFFFFF"/>
+
+    <ListView
+        android:id="@+id/listViewProducts"
+        android:layout_width="wrap_content"
+        android:layout_height="358dp"
+        android:fontFamily="serif"
+        android:textColor="#FFFFFF"/>
+
+    <EditText
+        android:id="@+id/etGrams"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Граммы"
+        android:backgroundTint="#F86464"
+        android:fontFamily="serif"
+        android:textColor="#FFFFFF"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#F86464"
+        android:fontFamily="serif"
+        android:textColor="#FFFFFF"
+        android:text="Сохранить" />
+
+    <Button
+        android:id="@+id/btnAddProduct"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#F86464"
+        android:fontFamily="serif"
+        android:textColor="#FFFFFF"
+        android:text="Добавить продукт" />
+</LinearLayout>
