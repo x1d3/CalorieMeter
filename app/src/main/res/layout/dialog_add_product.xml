@@ -9,6 +9,8 @@
         android:id="@+id/etProductName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="#C55858"
+        android:fontFamily="serif"
         android:hint="Название продукта" />
 
     <EditText
@@ -16,5 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Калории на 100г"
+        android:backgroundTint="#C55858"
+        android:fontFamily="serif"
         android:inputType="number" />
 </LinearLayout>
