@@ -1,6 +1,5 @@
 package com.example.caloriemeter
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
@@ -11,11 +10,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-
+import com.example.caloriemeter.dao.Consumption
+import com.example.caloriemeter.dao.ConsumptionDao
+import com.example.caloriemeter.dao.ProductDao
 
 class caloriesCalculator : AppCompatActivity() {
 
     private lateinit var dbHelper: DatabaseHelper
+    private lateinit var productDao: ProductDao
+    private lateinit var consumptionDao: ConsumptionDao
     private lateinit var tvMorningCalories: TextView
     private lateinit var tvLunchCalories: TextView
     private lateinit var tvEveningCalories: TextView
@@ -34,6 +37,8 @@ class caloriesCalculator : AppCompatActivity() {
         }
 
         dbHelper = DatabaseHelper(this)
+        productDao = dbHelper.productDao
+        consumptionDao = dbHelper.consumptionDao
 
         tvMorningCalories = findViewById(R.id.tvMorningCalories)
         tvLunchCalories = findViewById(R.id.tvLunchCalories)
@@ -43,6 +48,8 @@ class caloriesCalculator : AppCompatActivity() {
         eveningListView = findViewById(R.id.eveningListView)
 
         findViewById<Button>(R.id.btnAddMorning).setOnClickListener {
+
+
             openAddProductActivity("Утро")
         }
         findViewById<Button>(R.id.btnAddLunch).setOnClickListener {
@@ -74,23 +81,11 @@ class caloriesCalculator : AppCompatActivity() {
     }
 
     private fun loadCaloriesAndProductsForMealTime(mealTime: String, listView: ListView, caloriesTextView: TextView) {
-        val db = dbHelper.readableDatabase
-
-        val cursor = db.rawQuery("SELECT p.name, p.calories_per_100g, c.grams FROM Consumption c JOIN Product p ON c.product_id = p.id WHERE c.meal_time = ?", arrayOf(mealTime))
-
-
-        val products = mutableListOf<String>()
-        var totalCalories = 0
-        cursor.use { cursor ->
-            while (cursor.moveToNext()) {
-                val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
-                val caloriesPer100g = cursor.getInt(cursor.getColumnIndexOrThrow("calories_per_100g"))
-                val grams = cursor.getInt(cursor.getColumnIndexOrThrow("grams"))
-                val calories = caloriesPer100g * grams / 100
-                products.add("$name: $calories ккал на $grams г")
-                totalCalories += calories
-            }
+        val consumptions = consumptionDao.getConsumptionsByMealTime(mealTime)
+        val products = consumptions.map {
+            "${it.productName}: ${it.caloriesPer100g * it.grams / 100} ккал на ${it.grams} г"
         }
+        val totalCalories = consumptions.sumBy { it.caloriesPer100g * it.grams / 100 }
         caloriesTextView.text = getString(R.string.calories_format, mealTime, totalCalories)
         listView.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, products)
     }
@@ -100,20 +95,24 @@ class caloriesCalculator : AppCompatActivity() {
             setTitle("Подтверждение сброса")
             setMessage("Вы уверены, что хотите сбросить статистику?")
             setPositiveButton("Да") { dialog, _ ->
-                resetCalories()
+                consumptionDao.deleteAllConsumptions()
+                loadCaloriesAndProducts()
                 dialog.dismiss()
             }
-            setNegativeButton("Нет") { dialog, _ ->
-                dialog.dismiss()
-            }
+            setNegativeButton("Нет") { dialog, _ -> dialog.dismiss() }
             create()
             show()
         }
     }
-
-    private fun resetCalories() {
-        val db = dbHelper.writableDatabase
-        db.execSQL("DELETE FROM Consumption")
-        loadCaloriesAndProducts()
+}
+data class Consumption(
+    val productName: String,
+    val caloriesPer100g: Int,
+    val grams: Int
+) {
+    override fun toString(): String {
+        return "$productName: ${caloriesPer100g * grams / 100} ккал на ${grams} г"
     }
 }
+
+

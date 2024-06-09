@@ -1,12 +1,16 @@
 package com.example.caloriemeter
-import android.content.ContentValues
+
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.caloriemeter.dao.ConsumptionDao
+import com.example.caloriemeter.dao.ProductDao
 
 class AddProductActivity : AppCompatActivity() {
     private lateinit var dbHelper: DatabaseHelper
+    private lateinit var productDao: ProductDao
+    private lateinit var consumptionDao: ConsumptionDao
     private lateinit var etGrams: EditText
     private lateinit var btnSave: Button
     private lateinit var btnAddProduct: Button
@@ -21,6 +25,9 @@ class AddProductActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_product)
 
         dbHelper = DatabaseHelper(this)
+        productDao = dbHelper.productDao
+        consumptionDao = dbHelper.consumptionDao
+
         etGrams = findViewById(R.id.etGrams)
         btnSave = findViewById(R.id.btnSave)
         btnAddProduct = findViewById(R.id.btnAddProduct)
@@ -58,21 +65,7 @@ class AddProductActivity : AppCompatActivity() {
     }
 
     private fun loadProducts(query: String) {
-        val db = dbHelper.readableDatabase
-        val cursor = db.rawQuery("SELECT id, name FROM Product WHERE name LIKE ?", arrayOf("%$query%"))
-        products.clear()
-
-        cursor.use {
-            while (cursor.moveToNext()) {
-                val idIndex = cursor.getColumnIndexOrThrow("id")
-                val nameIndex = cursor.getColumnIndexOrThrow("name")
-                val id = cursor.getInt(idIndex)
-                val name = cursor.getString(nameIndex)
-
-                products.add(Pair(id, name))
-            }
-        }
-
+        products = productDao.getAllProducts(query).toMutableList()
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, products.map { it.second })
         listViewProducts.adapter = adapter
     }
@@ -88,14 +81,7 @@ class AddProductActivity : AppCompatActivity() {
             return
         }
 
-        val db = dbHelper.writableDatabase
-        val values = ContentValues().apply {
-            put("meal_time", mealTime)
-            put("product_id", productId)
-            put("grams", grams)
-        }
-
-        db.insert("Consumption", null, values)
+        consumptionDao.insertConsumption(mealTime, productId, grams)
         finish()
     }
 
@@ -104,6 +90,7 @@ class AddProductActivity : AppCompatActivity() {
         val etProductName = dialogView.findViewById<EditText>(R.id.etProductName)
         val etCalories = dialogView.findViewById<EditText>(R.id.etCalories)
 
+
         AlertDialog.Builder(this)
             .setTitle("Добавить продукт")
             .setView(dialogView)
@@ -111,9 +98,8 @@ class AddProductActivity : AppCompatActivity() {
                 val productName = etProductName.text.toString()
                 val calories = etCalories.text.toString().toIntOrNull()
 
-
                 if (productName.isNotBlank() && calories != null && calories > 0) {
-                    saveProduct(productName, calories)
+                    productDao.insertProduct(productName, calories)
                     loadProducts(searchView.query.toString()) // Обновляем список продуктов после добавления нового
                 } else {
                     Toast.makeText(this, "Введите корректные данные", Toast.LENGTH_SHORT).show()
@@ -124,14 +110,5 @@ class AddProductActivity : AppCompatActivity() {
             .create()
             .show()
     }
-
-    private fun saveProduct(name: String, calories: Int) {
-        val db = dbHelper.writableDatabase
-        val values = ContentValues().apply {
-            put("name", name)
-            put("calories_per_100g", calories)
-        }
-
-        db.insert("Product", null, values)
-    }
 }
+
